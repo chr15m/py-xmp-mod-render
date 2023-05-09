@@ -1,12 +1,27 @@
 Simple Python library to extract tracker module information using the `xmp` program.
 
-Can be run from the command line:
+# Install
 
-`./mod-render.py MODFILE`
+```
+pip install git+https://github.com/chr15m/py-xmp-mod-render.git@main
+```
+
+# Use
+
+```python
+from modrender import modrender
+modrender("myfile.it")
+```
+
+Can also be run from the command line:
+
+`mod-render MODFILE`
 
 Tested on `.xm`, `.it`, and `.mptm` files.
 
-# `get_info(modfile)`
+# API
+
+## `get_info(modfile)`
 
 Returns a struct like this:
 
