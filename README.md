@@ -1,5 +1,7 @@
 Simple Python library to extract tracker module information using the `xmp` program.
 
+Depends on `xmp` being installed.
+
 # Install
 
 ```
@@ -25,6 +27,7 @@ Tested on `.xm`, `.it`, and `.mptm` files.
 
 Returns a struct like this:
 
+```
 {'channelcount': 8,
  'channelnames': {0: 'arpeg', 1: 'melody', 2: 'amen', 3: 'beats', 4: 'blippy'},
  'comments': 'By anonymous',
@@ -46,4 +49,4 @@ Returns a struct like this:
          '\n'
          '> By anonymous\n'
          '\n'}
-
+```
