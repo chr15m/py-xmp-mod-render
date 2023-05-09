@@ -46,7 +46,12 @@ def get_info(modfile):
                 "channelnames": get_channel_names(modfile, channels),
                 "info": info}
 
-if __name__ == "__main__":
+def modrender():
     from pprint import pprint
     if len(argv) > 1:
         pprint(get_info(argv[1]))
+    else:
+        print("Usage: modrender MODFILE")
+
+if __name__ == "__main__":
+    modrender()
