@@ -5,11 +5,11 @@ from os.path import exists
 from sys import argv
 from subprocess import check_output, STDOUT
 
-def run(cmd):
+def _run(cmd):
     return check_output(cmd, stderr=STDOUT, shell=True)
 
-def mod_make_loop_files(modfile, channel_count):
-    return [run("xmp -S " + str(i) + " " + modfile + " --nocmd -m -a 1 -o " + wavtmp + "/" + str(i) + ".wav").decode("utf8")
+def mod_make_loop_files(modfile, outdir, channel_count):
+    return [_run("xmp -S " + str(i) + " " + modfile + " --nocmd -m -a 1 -o " + outdir + "/" + str(i) + ".wav").decode("utf8")
             for i in range(channel_count)]
 
 def mod_get_channel_names(modfile, channels):
@@ -36,15 +36,17 @@ def mod_get_channel_names(modfile, channels):
 
 def mod_get_info(modfile):
     if exists(modfile):
-        info = run("xmp --load-only -C " + modfile).decode("utf8")
+        info = _run("xmp --load-only -C " + modfile).decode("utf8")
         #print(info)
         channels = int(re.findall("Channels\ +: (\d+)", info)[0])
         commentlines = re.findall("> (.*?)[\n$]", info)
         comments = "\n".join(commentlines)
+        infolines = {l[0]: l[2] for l in re.findall("(.*?)(\s*): (.*)", info)}
         return {"channelcount": channels,
                 "comments": comments,
                 "channelnames": mod_get_channel_names(modfile, channels),
-                "info": info}
+                "info": infolines,
+                "raw": info}
 
 def modrender():
     from pprint import pprint
