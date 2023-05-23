@@ -8,11 +8,11 @@ from subprocess import check_output, STDOUT
 def run(cmd):
     return check_output(cmd, stderr=STDOUT, shell=True)
 
-def make_mod_files(modfile, channels):
+def mod_make_loop_files(modfile, channel_count):
     return [run("xmp -S " + str(i) + " " + modfile + " --nocmd -m -a 1 -o " + wavtmp + "/" + str(i) + ".wav").decode("utf8")
-            for i in range(channels)]
+            for i in range(channel_count)]
 
-def get_channel_names(modfile, channels):
+def mod_get_channel_names(modfile, channels):
     with open(modfile, "rb") as m:
         f = m.read()
         try:
@@ -34,7 +34,7 @@ def get_channel_names(modfile, channels):
                 break
         return channel_names
 
-def get_info(modfile):
+def mod_get_info(modfile):
     if exists(modfile):
         info = run("xmp --load-only -C " + modfile).decode("utf8")
         #print(info)
@@ -43,13 +43,13 @@ def get_info(modfile):
         comments = "\n".join(commentlines)
         return {"channelcount": channels,
                 "comments": comments,
-                "channelnames": get_channel_names(modfile, channels),
+                "channelnames": mod_get_channel_names(modfile, channels),
                 "info": info}
 
 def modrender():
     from pprint import pprint
     if len(argv) > 1:
-        pprint(get_info(argv[1]))
+        pprint(mod_get_info(argv[1]))
     else:
         print("Usage: modrender MODFILE")
 
