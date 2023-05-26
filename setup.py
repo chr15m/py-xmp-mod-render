@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='modrender',
-    version='0.0.1',
+    version='0.0.2',
     url='https://github.com/chr15m/py-xmp-mod-render.git',
     author='Chris McCormick',
     author_email='chris@mccormick.cx',
