@@ -1,16 +1,26 @@
 #!/usr/bin/env python
 
 import re
-from os.path import exists
+from os.path import exists, getmtime
 from sys import argv
 from subprocess import check_output, STDOUT
 
 def _run(cmd):
     return check_output(cmd, stderr=STDOUT, shell=True)
 
+def _stem_name(outdir, i):
+    return outdir + "/" + str(i) + ".wav"
+
+def _export_track(modfile, outdir, i):
+    return _run("xmp -S " + str(i) + " " + modfile + " --nocmd -m -a 1 -o " + _stem_name(outdir, i)).decode("utf8")
+
+def _stem_is_older(modfile, outdir, i):
+    return not exists(_stem_name(outdir, i)) or (getmtime(modfile) > getmtime(_stem_name(outdir, i)))
+
 def mod_make_stems(modfile, outdir, channel_count):
-    return [_run("xmp -S " + str(i) + " " + modfile + " --nocmd -m -a 1 -o " + outdir + "/" + str(i) + ".wav").decode("utf8")
-            for i in range(channel_count)]
+    return [_export_track(modfile, outdir, i)
+            for i in range(channel_count)
+            if _stem_is_older(modfile, outdir, i)]
 
 def mod_get_channel_names(modfile, channels):
     with open(modfile, "rb") as m:
