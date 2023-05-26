@@ -8,7 +8,7 @@ from subprocess import check_output, STDOUT
 def _run(cmd):
     return check_output(cmd, stderr=STDOUT, shell=True)
 
-def mod_make_loop_files(modfile, outdir, channel_count):
+def mod_make_stems(modfile, outdir, channel_count):
     return [_run("xmp -S " + str(i) + " " + modfile + " --nocmd -m -a 1 -o " + outdir + "/" + str(i) + ".wav").decode("utf8")
             for i in range(channel_count)]
 
@@ -50,8 +50,12 @@ def mod_get_info(modfile):
 
 def modrender():
     from pprint import pprint
+    from os import makedirs
     if len(argv) > 1:
-        pprint(mod_get_info(argv[1]))
+        mod_info = mod_get_info(argv[1])
+        pprint(mod_info)
+        makedirs("stems", exist_ok=True)
+        mod_make_stems(argv[1], "stems", mod_info["channelcount"])
     else:
         print("Usage: modrender MODFILE")
 
